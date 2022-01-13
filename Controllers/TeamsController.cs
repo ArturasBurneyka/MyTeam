@@ -40,7 +40,7 @@ namespace MyTeam.Controllers {
         }
 
         [HttpPost("My")]
-        public ActionResult<IEnumerable<ReadTeamDto2>> GetMy(
+        public async Task<ActionResult<IEnumerable<ReadTeamDto2>>> GetMy(
             [FromBody] FindTeamsByPlayerEmailDto body
         ) {
             if(String.IsNullOrEmpty(body.Email)) {
@@ -50,10 +50,10 @@ namespace MyTeam.Controllers {
             List<ReadTeamDto2> result = new List<ReadTeamDto2>();
 
             List<Team2> myTeams =
-                this._context.TeamsPlayers
+                await this._context.TeamsPlayers
                 .Where(tp => tp.PlayerEmail == body.Email)
                 .Join(this._context.Teams, tp => tp.TeamId, t => t.Id, (tp, t) => t)
-                .ToList();
+                .ToListAsync();
 
             foreach(Team2 t in myTeams) {
                 result.Add(new ReadTeamDto2() {
