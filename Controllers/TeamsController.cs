@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MyTeam.Models;
 
 namespace MyTeam.Controllers {
@@ -20,10 +21,10 @@ namespace MyTeam.Controllers {
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<ReadTeamDto>> GetAll() {
+        public async Task<ActionResult<IEnumerable<ReadTeamDto>>> GetAll() {
             List<ReadTeamDto> output = new List<ReadTeamDto>();
 
-            List<Team2> teams = this._context.Teams.ToList();
+            List<Team2> teams = await this._context.Teams.ToListAsync();
 
             foreach (Team2 team in teams) {
                 ReadTeamDto o = new ReadTeamDto() {
