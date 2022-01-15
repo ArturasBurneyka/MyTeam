@@ -17,6 +17,9 @@ namespace MyTeam.Controllers {
             this._context = context;
         }
 
+        /// <summary>
+        /// Getting all players
+        /// </summary>
         [HttpGet]
         public IActionResult GetAll() {
             List<ReadPlayerDto> output = new List<ReadPlayerDto>();
@@ -44,6 +47,9 @@ namespace MyTeam.Controllers {
             return Ok(output);
         }
 
+        /// <summary>
+        /// Creating new player
+        /// </summary>
         [HttpPost]
         public IActionResult Create([FromBody] CreatePlayerDto createPlayerDto) {
 
