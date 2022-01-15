@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,12 +38,15 @@ namespace MyTeam
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc(
-                    "v.20.11",
+                    "2022.01.15",
                     new OpenApiInfo {
                         Title = "MyTeam Service",
                         Description = "Service for whose who want to know where is their team",
-                        Version = "November 24th, 2021"
+                        Version = "Jan 15, 2022"
                     });
+                string fileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                string filePath = Path.Combine(AppContext.BaseDirectory, fileName);
+                options.IncludeXmlComments(filePath);
             });
         }
 
@@ -70,7 +75,7 @@ namespace MyTeam
 
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v.20.11/swagger.json", "MyTeam Service");
+                options.SwaggerEndpoint("/swagger/2022.01.15/swagger.json", "MyTeam Service");
             });
         }
     }
