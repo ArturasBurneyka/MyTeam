@@ -47,4 +47,16 @@ namespace MyTeam.Models {
         public DateTime WhenCreated { get; set; }
         public ReadPositionDto Position { get; set; }
     }
+
+    [NotMapped]
+    public class UpdatePlayerDto {
+        public string Email { get; set; }
+        public string Nick { get; set; }
+        public string Type { get; set; }
+    }
+
+    [NotMapped]
+    public class DeletePlayerDto {
+        public string Email { get; set; }
+    }
 }
