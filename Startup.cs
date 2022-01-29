@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -38,16 +39,20 @@ namespace MyTeam
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc(
-                    "2022.01.15",
+                    "2022.01.23",
                     new OpenApiInfo {
                         Title = "MyTeam Service",
                         Description = "Service for whose who want to know where is their team",
-                        Version = "Jan 15, 2022"
+                        Version = "Jan 23, 2022"
                     });
                 string fileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 string filePath = Path.Combine(AppContext.BaseDirectory, fileName);
                 options.IncludeXmlComments(filePath);
             });
+
+            // We can use one of two lines below
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+            //services.AddMediatR(typeof(Startup).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,7 +80,7 @@ namespace MyTeam
 
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/2022.01.15/swagger.json", "MyTeam Service");
+                options.SwaggerEndpoint("/swagger/2022.01.23/swagger.json", "MyTeam Service");
             });
         }
     }
