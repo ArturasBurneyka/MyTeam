@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using MyTeam.Models;
+using MyTeam.Queries;
 
 namespace MyTeam.Controllers {
 
@@ -14,39 +16,19 @@ namespace MyTeam.Controllers {
 
         // DI
         private readonly MyTeamContext _context;
+        private readonly IMediator _mediator;
 
-        public PlayersController(MyTeamContext context) {
+        public PlayersController(MyTeamContext context, IMediator mediator) {
             this._context = context;
+            this._mediator = mediator;
         }
 
         /// <summary>
         /// Getting all players (Получение всех игроков)
         /// </summary>
         [HttpGet]
-        public IActionResult GetAll() {
-            List<ReadPlayerDto> output = new List<ReadPlayerDto>();
-
-            List<Player2> players = this._context.Players.ToList();
-            Dictionary<string, Position> positions =
-                this._context.Positions.ToDictionary(k => k.Email);
-
-            foreach (Player2 player in players) {
-                ReadPlayerDto o = new ReadPlayerDto() {
-                    Email = player.Email,
-                    Nick = player.Nick,
-                    Type = player.Type,
-                    WhenCreated = player.WhenCreated,
-                    Position = new ReadPositionDto {
-                        Lng = positions[player.Email].Lng,
-                        Lat = positions[player.Email].Lat,
-                        WhenUpdated = positions[player.Email].WhenUpdated
-                    }
-                };
-                
-                output.Add(o);
-            }
-
-            return Ok(output);
+        public async Task<IActionResult> GetAll() {
+            return Ok(await this._mediator.Send(new GetAllPlayersQuery()));
         }
 
         /// <summary>
