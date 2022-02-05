@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using MyTeam.Commands;
 using MyTeam.Models;
 using MyTeam.Queries;
 
@@ -27,7 +28,8 @@ namespace MyTeam.Controllers {
         /// Getting all players (Получение всех игроков)
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> GetAll() {
+        public async Task<IActionResult> GetAll()
+        {
             return Ok(await this._mediator.Send(new GetAllPlayersQuery()));
         }
 
@@ -35,27 +37,12 @@ namespace MyTeam.Controllers {
         /// Creating new player (Создание нового игрока)
         /// </summary>
         [HttpPost]
-        public IActionResult Create([FromBody] CreatePlayerDto createPlayerDto) {
-
-            Player2 player = new Player2() {
-                Email = createPlayerDto.Email,
-                Nick = createPlayerDto.Nick,
-                Type = createPlayerDto.Type,
-                WhenCreated = DateTime.Now
-            };
-
-            Position pos = new Position() {
-                Email = createPlayerDto.Email,
-                Lng = 0.0F,
-                Lat = 0.0F,
-                WhenUpdated = DateTime.Now
-            };
-
-            this._context.Players.Add(player);
-            this._context.Positions.Add(pos);
-            this._context.SaveChanges();
-
-            return Created("", null);
+        public async Task<IActionResult> Create([FromBody] CreatePlayerCommand command)
+        {
+            return Created(
+                string.Format("http://localhost:5001/Players/{0}", command.Email),
+                await this._mediator.Send(command)
+            );
         }
 
         /// <summary>
